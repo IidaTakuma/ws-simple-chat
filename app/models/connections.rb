@@ -48,7 +48,8 @@ class Connections
     connections = []
 
     scan_hash = {
-      projection_expression: '#connection_id'
+      projection_expression: '#connectionId',
+      expression_attribute_names: {'#connectionId' => 'connectionId'},
     }
     done = false
     start_key = nil

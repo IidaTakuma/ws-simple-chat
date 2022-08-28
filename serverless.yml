@@ -2,9 +2,12 @@ service: ws-simple-chat
 
 frameworkVersion: '3'
 
+custom:
+  region: ap-northeast-1
+
 provider:
   name: aws
-  region: ap-northeast-1
+  region: ${self:custom.region}
   runtime: ruby2.7
   iamRoleStatements:
     - Effect: Allow
@@ -15,6 +18,7 @@ provider:
   environment:
     TABLE_NAME:
       Ref: ConnectionsTable
+    REGION: ${self:custom.region}
   websocketsApiName: ${self:service}
   websocketsApiRouteSelectionExpression: $request.body.message
 
@@ -29,11 +33,11 @@ functions:
     events:
       - websocket:
           route: $disconnect
-  # sendMessage:
-  #   handler: app/functions/send_message.handler
-  #   events:
-  #     - websocket:
-  #         path: send_message
+  sendMessage:
+    handler: app/functions/send_message.handler
+    events:
+      - websocket:
+          route: send_message
 
 resources:
   Resources:
