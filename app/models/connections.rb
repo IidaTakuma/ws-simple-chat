@@ -2,12 +2,9 @@ require 'aws-sdk-dynamodb'
 
 class Connections
 
-  attr_reader :dynamo_resource
   attr_reader :table
 
-  def initialize(dynamo_resource, table_name)
-    @dynamo_resource = dynamo_resource
-
+  def initialize(table_name)
     load_table(table_name)
   end
 
