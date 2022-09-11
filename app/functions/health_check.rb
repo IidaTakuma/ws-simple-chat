@@ -3,7 +3,8 @@ require 'json'
 
 def handler(event:, context:)
   begin
-    Connections.new(ENV['TABLE_NAME']) # dynamodb connection test
+    connections = Connections.new(ENV['TABLE_NAME']) # dynamodb connection test
+    connections.add_connection('test_123')
     { statusCode: 200, body: { message: 'ok' }.to_json }
   rescue StandardError => e
     puts e.message

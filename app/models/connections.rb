@@ -2,15 +2,28 @@ require 'aws-sdk-dynamodb'
 
 class Connections
 
-  attr_reader :table
-
   def initialize(table_name)
-    load_table(table_name)
+    @table_name = table_name
+    load_client
   end
 
-  def load_table(table_name)
-    @table = Aws::DynamoDB::Table.new(table_name).load
-    nil
+  def load_client
+    puts "ENV['IS_OFFLINE']: #{ENV['IS_OFFLINE']}"
+    client_options = if ENV['IS_OFFLINE']
+      {
+        region: 'ap-northeast-1',
+        endpoint: 'http://127.0.0.1:8000',
+        credentials: Aws::Credentials.new(
+          'DEFAULT_ACCESS_KEY',
+          'DEFAULT_SECRET',
+          'DEFAULT_SESSION_TOKEN'
+        )
+      }
+    else
+      {}
+    end
+
+    @client = Aws::DynamoDB::Client.new(client_options)
 
   rescue Aws::DynamoDB::Errors::ResourceNotFoundException
     puts "Table #{table_name} doesn't exist. Please create table before execute this Programm."
@@ -22,18 +35,20 @@ class Connections
   end
 
   def add_connection(connection_id)
-    @table.put_item(
-      item: { 'connectionId' => connection_id }
+    @client.put_item(
+      item: { 'connectionId' => connection_id },
+      table_name: @table_name
     )
   rescue Aws::Errors::ServiceError => e
-    puts("Couldn't add connectionId: #{connection_id} to table #{@table.name}. Here's why:")
+    # puts("Couldn't add connectionId: #{connection_id} to table #{@client.name}. Here's why:")
     puts("\t#{e.code}: #{e.message}")
     raise
   end
 
   def delete_connection(connection_id)
     @table.delete_item(
-      key: { 'connectionId' => connection_id }
+      key: { 'connectionId' => connection_id },
+      table_name: @table_name
     )
   rescue Aws::Errors::ServiceError => e
     puts("Couldn't delete connectionId #{connection_id}. Here's why:")
@@ -47,12 +62,13 @@ class Connections
     scan_hash = {
       projection_expression: '#connectionId',
       expression_attribute_names: {'#connectionId' => 'connectionId'},
+      table_name: @table_name
     }
     done = false
     start_key = nil
     until done
       scan_hash[:exclusive_start_key] = start_key unless start_key.nil?
-      response = @table.scan(scan_hash)
+      response = @client.scan(scan_hash)
       connections.concat(response.items) unless response.items.nil?
       start_key = response.last_evaluated_key
       done = start_key.nil?
