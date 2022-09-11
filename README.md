@@ -2,7 +2,7 @@
 
 This repository is a simple WebSocket Chat composed by ServerlessFramework + AWS + Ruby Lang.
 
-== demo gif here ==
+![demo](https://github.com/IidaTakuma/ws-simple-chat/blob/media/websocket_demo.gif)
 
 ### Get Started
 
