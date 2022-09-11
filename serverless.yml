@@ -4,7 +4,6 @@ frameworkVersion: '3'
 
 custom:
   region: ap-northeast-1
-
 provider:
   name: aws
   region: ${self:custom.region}
@@ -23,6 +22,12 @@ provider:
   websocketsApiRouteSelectionExpression: $request.body.message
 
 functions:
+  health_check:
+    handler: app/functions/health_check.handler
+    events:
+      - http:
+          path: health_check
+          method: get
   connect:
     handler: app/functions/onconnect.handler
     events:
