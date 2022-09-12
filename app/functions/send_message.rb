@@ -8,7 +8,7 @@ def handler(event:, context:)
   receivers = connections.scan_connections
 
   endpoint = "https://#{event['requestContext']['domainName']}/#{event['requestContext']['stage']}"
-  apigwManagementApiClient = Aws::ApiGatewayManagementApi::Resource.new(endpoint: endpoint).client
+  apigwManagementApiClient = Aws::ApiGatewayManagementApi::Client.new(endpoint: endpoint)
 
   receivers.each do |receiver|
     begin
