@@ -3,7 +3,7 @@ require 'json'
 
 def handler(event:, context:)
   connection_id = event['requestContext']['connectionId']
-  connections = Connections.new(ENV['TABLE_NAME'])
+  connections = Connections.new(ENV['CONNECTIONS_TABLE'])
 
   begin
     connections.add_connection(connection_id)

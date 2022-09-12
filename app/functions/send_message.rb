@@ -3,7 +3,7 @@ require 'aws-sdk-apigatewaymanagementapi'
 require 'json'
 
 def handler(event:, context:)
-  connections = Connections.new(ENV['TABLE_NAME'])
+  connections = Connections.new(ENV['CONNECTIONS_TABLE'])
   message = JSON.parse(event['body'])['data']
   receivers = connections.scan_connections
 

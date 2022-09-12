@@ -4,25 +4,46 @@ frameworkVersion: '3'
 
 custom:
   region: ap-northeast-1
+  connectionsTableName: "connections-table-${self:provider.stage}"
+  dynamodb:
+    stages:
+      - dev
+    start:
+      docker: true
+      port: 8000
+      inMemory: true
+      migrate: true
+      sharedDb: true
 
 provider:
   name: aws
-  region: ${self:custom.region}
   runtime: ruby2.7
+  region: ${self:custom.region}
+  stage: dev
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:*
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource:
-        - Fn::GetAtt: [ ConnectionsTable, Arn ]
-  environment:
-    TABLE_NAME:
-      Ref: ConnectionsTable
-    REGION: ${self:custom.region}
+        - Fn::GetAtt: [ConnectionsTable, Arn]
   websocketsApiName: ${self:service}
   websocketsApiRouteSelectionExpression: $request.body.message
+  environment:
+    CONNECTIONS_TABLE: ${self:custom.connectionsTableName}
+    REGION: ${self:custom.region}
 
 functions:
+  health_check:
+    handler: app/functions/health_check.handler
+    events:
+      - httpApi:
+          path: /health_check
+          method: get
   connect:
     handler: app/functions/onconnect.handler
     events:
@@ -44,7 +65,6 @@ resources:
     ConnectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: wsSimpleChat_connections
         AttributeDefinitions:
           - AttributeName: connectionId
             AttributeType: S
@@ -54,3 +74,8 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+        TableName: ${self:custom.connectionsTableName}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
