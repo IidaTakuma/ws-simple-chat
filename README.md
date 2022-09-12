@@ -1,8 +1,8 @@
 ## ws-simple-chat
 
-This repository is a simple WebSocket Chat composed by ServerlessFramework + AWS + Ruby Lang.
+This repository is a Simple WebSocket Chat composed of ServerlessFramework + AWS + Ruby Lang.
 
-== demo gif here ==
+<img src="https://github.com/IidaTakuma/ws-simple-chat/blob/media/websocket_demo.gif" width=75%>
 
 ### Get Started
 

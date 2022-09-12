@@ -14,7 +14,6 @@ custom:
       inMemory: true
       migrate: true
       sharedDb: true
-
 provider:
   name: aws
   runtime: ruby2.7
