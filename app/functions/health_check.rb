@@ -5,8 +5,9 @@ def handler(event:, context:)
   begin
     connections = Connections.new(ENV['CONNECTIONS_TABLE']) # dynamodb connection test
 
-    # TODO: recordが残らない方法で接続確認する
-    # connections.add_connection('test_123')
+    connections.add_connection('test_123')
+    connections.scan_connections
+    connections.delete_connection('test_123')
 
     { statusCode: 200, body: { message: 'ok' }.to_json }
   rescue StandardError => e
