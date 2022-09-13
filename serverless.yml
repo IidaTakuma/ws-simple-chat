@@ -31,7 +31,7 @@ provider:
       Resource:
         - Fn::GetAtt: [ConnectionsTable, Arn]
   websocketsApiName: ${self:service}
-  websocketsApiRouteSelectionExpression: $request.body.message
+  websocketsApiRouteSelectionExpression: $request.body.method
   environment:
     CONNECTIONS_TABLE: ${self:custom.connectionsTableName}
     REGION: ${self:custom.region}
