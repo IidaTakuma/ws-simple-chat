@@ -1,4 +1,4 @@
-## ws-simple-chat
+# ws-simple-chat
 
 This repository is a Simple WebSocket Chat composed of ServerlessFramework + AWS + Ruby Lang.
 
