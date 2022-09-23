@@ -43,7 +43,7 @@ class Connections
 
   def delete_connection(connection_id)
     @client.delete_item(
-      key: { 'connectionId' => connection_id },
+      key: { connectionId: connection_id },
       table_name: @table_name
     )
   rescue Aws::Errors::ServiceError => e
