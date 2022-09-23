@@ -1,4 +1,4 @@
-## ws-simple-chat
+# ws-simple-chat
 
 This repository is a Simple WebSocket Chat composed of ServerlessFramework + AWS + Ruby Lang.
 
@@ -23,4 +23,24 @@ export AWS_SECRET_ACCESS_KEY=<your-secret-key>
 
 ```
 sls deploy
+```
+
+### Local Development
+
+1. Install require packages
+
+```
+npm install
+```
+
+2. Install DyanmoDB Local
+
+```
+sls dynamodb install
+```
+
+3. Run
+
+```
+sls offline start
 ```
